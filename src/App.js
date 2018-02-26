@@ -2,24 +2,10 @@ import React, { Component } from "react";
 import logo from "./logo.svg";
 import "./App.css";
 
-// import { StackNavigator } from "react-navigation";
 import MonsterGrid from "components/Views/MonsterGrid";
 import MonsterDetailsView from "components/Views/MonsterDetailsView";
 import MaterialsView from "components/Views/MaterialsView";
 import Sidebar from "components/shared/Sidebar";
-
-// const RootStack = StackNavigator(
-//   {
-//     MonsterList: { screen: MonsterGrid },
-//     MonsterDetail: { screen: MonsterDetailsView },
-//     Materials: { screen: MaterialsView },
-//     Sidebar: { screen: Sidebar }
-//   },
-//   {
-//     initialRouteName: "MonsterList"
-//     // initialRouteName: 'Materials',
-//   }
-// );
 
 class App extends React.Component {
   state = {
@@ -32,7 +18,13 @@ class App extends React.Component {
   );
 
   renderNavItems = viewNames => (
-    <li>{viewNames.map(viewName => <ul>{this.renderNavIem(viewName)}</ul>)}</li>
+    <ul className="app-root__nav-items">
+      {viewNames.map(viewName => (
+        <li className="app-root__nav-items__item">
+          {this.renderNavIem(viewName)}
+        </li>
+      ))}
+    </ul>
   );
 
   render() {
@@ -43,7 +35,7 @@ class App extends React.Component {
       Sidebar: <Sidebar />
     };
     return (
-      <div>
+      <div id="app-root">
         {this.renderNavItems(Object.keys(views))}
         {views[this.state.view]}
       </div>

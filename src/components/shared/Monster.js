@@ -2,16 +2,23 @@ import React from "react";
 
 function Monster({ name, image, style, ...restProps }) {
   return (
-    <img src={image} style={[styles.monsterIcon, style]} {...restProps} />
+    <div className="monster-icon__container" style={styles["monster-icon__container"]}>
+      <img
+        src={image}
+        style={{ ...styles.monsterIcon, ...style }}
+        {...restProps}
+      />
+    </div>
   );
 }
 
 const styles = {
   monsterIcon: {
     margin: 10,
-    width: 100,
-    height: 100,
-    backgroundColor: "white"
+    maxWidth: "100%"
+  },
+  "monster-icon__container": {
+    flexBasis: '30%',
   }
 };
 

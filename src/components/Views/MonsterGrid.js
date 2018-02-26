@@ -8,28 +8,24 @@ import makeLogger from "debug";
 const log = makeLogger("component:MonsterGrid");
 
 const styles = {
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    justifyContent: "center",
-    paddingTop: 0,
-    marginTop: 0
-  },
   listViewContainer: {
+    display: "flex",
+    flex: 1,
     flexDirection: "row",
     flexWrap: "wrap",
     alignItems: "center",
     justifyContent: "center"
   },
   elementSortPicker: {
-    marginTop: 0,
-    paddingTop: 0,
-    height: 50
+    flexBasis: 50
   },
   elementSortPicker: {
     marginTop: 0,
     paddingTop: 0,
-    height: 50
+    flexBasis: 50
+  },
+  "monster-icon__container": {
+    flexBasis: "20%"
   }
 };
 
@@ -48,7 +44,11 @@ export default class MonsterGrid extends React.Component {
     log(`in renderMonster, given: `, { monster });
     if (!monster) return null;
     return (
-      <a href="#" onPress={this.openMonsterDetail(monster)}>
+      <a
+        className="monster-icon__container"
+        style={styles["monster-icon__container"]}
+        onPress={this.openMonsterDetail(monster)}
+      >
         <Monster image={monster.image} name={monster.name} key={monster.key} />
       </a>
     );
@@ -135,10 +135,10 @@ export default class MonsterGrid extends React.Component {
     log({ sectionedMonsterData });
 
     return (
-      <div style={styles.container}>
-        <a href="#" onPress={this.openSidebar}>
-          <span onPress={this.openSidebar}>Sidebar test</span>
-        </a>
+      <div
+        className="monster-grid__container"
+        style={{ ...styles.container, ...styles.listViewContainer }}
+      >
         {/* <Picker
           selectedValue={this.state.sortElement}
           onValueChange={this.handlePickerValueChange}
@@ -157,23 +157,20 @@ export default class MonsterGrid extends React.Component {
           <Picker.Item label="Stun" value="Stun" />
         </Picker> */}
         {sectionedMonsterData &&
-          sectionedMonsterData.length && (
-            <div style={styles.listViewContainer}>
-              {sectionedMonsterData.map(section => {
-                log("in sectionedMonsterData.map for main grid render, given", {
-                  section
-                });
-                const { data: monsterList = [] } = section || {};
-                log("extracted data key for monster list", { monsterList });
-                return monsterList.map(monster => {
-                  log(`rendering monster ${monster && monster.name}`, {
-                    monster
-                  });
-                  return this.renderMonster(monster);
-                });
-              })}
-            </div>
-          )}
+          sectionedMonsterData.length &&
+          sectionedMonsterData.map(section => {
+            log("in sectionedMonsterData.map for main grid render, given", {
+              section
+            });
+            const { data: monsterList = [] } = section || {};
+            log("extracted data key for monster list", { monsterList });
+            return monsterList.map(monster => {
+              log(`rendering monster ${monster && monster.name}`, {
+                monster
+              });
+              return this.renderMonster(monster);
+            });
+          })}
       </div>
     );
   }
