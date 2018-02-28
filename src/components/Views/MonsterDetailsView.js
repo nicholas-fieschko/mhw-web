@@ -21,7 +21,7 @@ export default class MonsterDetailsView extends Component {
 
   WeaknessRating = ({ elementName, starCount, style }) => {
     const stars = Array(starCount)
-      .fill("+")
+      .fill("⭐")
       .join("");
 
     return <span style={style}>{`${elementName}: ${stars}`}</span>;
