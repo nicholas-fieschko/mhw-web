@@ -1,5 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
+import { Link } from "react-router-dom";
 import Monster from "components/shared/Monster";
 import { getAllSortedMonsterData } from "repos/monsters";
 import Sidebar from "components/shared/Sidebar";
@@ -8,9 +9,9 @@ import makeLogger from "debug";
 const log = makeLogger("component:MonsterGrid");
 
 const styles = {
-  listViewContainer: {
+  //need to convert to css
+  "monster-grid__container": {
     display: "flex",
-    flex: 1,
     flexDirection: "row",
     flexWrap: "wrap",
     alignItems: "center",
@@ -33,7 +34,6 @@ export default class MonsterGrid extends React.Component {
   constructor(props) {
     super(props);
     const monsterData = getAllSortedMonsterData();
-    // log(`in constructor, monsterData: `, { monsterData });
     this.state = {
       sortElement: null,
       monsterData
@@ -44,19 +44,15 @@ export default class MonsterGrid extends React.Component {
     log(`in renderMonster, given: `, { monster });
     if (!monster) return null;
     return (
-      <a
+      <Link
+        to={`/monster/${monster.name}`}
         className="monster-icon__container"
         style={styles["monster-icon__container"]}
-        onPress={this.openMonsterDetail(monster)}
       >
         <Monster image={monster.image} name={monster.name} key={monster.key} />
-      </a>
+      </Link>
     );
   };
-
-  openMonsterDetail(monster) {
-    return () => this.props.navigation.navigate("MonsterDetail", { monster });
-  }
 
   handlePickerValueChange = selectedElement => {
     const sortField =
@@ -137,7 +133,7 @@ export default class MonsterGrid extends React.Component {
     return (
       <div
         className="monster-grid__container"
-        style={{ ...styles.container, ...styles.listViewContainer }}
+        style={{ ...styles.container, ...styles["monster-grid__container"] }}
       >
         {/* <Picker
           selectedValue={this.state.sortElement}

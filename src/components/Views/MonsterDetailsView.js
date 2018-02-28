@@ -1,48 +1,51 @@
-import React, { Component } from 'react';
-import Monster from 'components/shared/Monster';
-import ErrorView from 'components/Views/ErrorView';
-import MonsterWeaknesses from 'data/monster-weaknesses';
-import WeaknessRating from 'components/shared/WeaknessRating';
+import React, { Component } from "react";
+import Monster from "components/shared/Monster";
+import ErrorView from "components/Views/ErrorView";
+import MonsterWeaknesses from "data/monster-weaknesses";
+import { MonsterNameDictionary } from "repos/monsters";
+import makeLogger from "debug";
 
-export default class MonsterDetailsView extends React.Component {
+const log = makeLogger("component:MonsterDetailsView");
+
+export default class MonsterDetailsView extends Component {
   constructor(props) {
     super(props);
-    const { params: { monster: { name: monsterName } } } = props.navigation.state;
+    const { name } = props.match.params;
+    log("MonsterDetailsView constructor props, MonsterNameDictionary", { props, MonsterNameDictionary });
+    const monsterData = MonsterNameDictionary[name];
     this.state = {
-      weaknesses: MonsterWeaknesses ? MonsterWeaknesses[monsterName] : null
+      monsterData,
+      weaknesses: MonsterWeaknesses[name]
     };
   }
 
+  WeaknessRating = ({ elementName, starCount, style }) => {
+    const stars = Array(starCount)
+      .fill("+")
+      .join("");
+
+    return <span style={style}>{`${elementName}: ${stars}`}</span>;
+  };
+
   render() {
-    if (!this.props.navigation || hasError) return null;
-    const { navigation: { state: { params: { monster } } } } = this.props
-    const { image, name } = monster || {};
-    const { hasError, weaknesses = {} } = this.state;
+    const { monsterData: { image, name }, weaknesses } = this.state;
 
-    if (hasError || !name || !image || !weaknesses) {
-      return (<ErrorView
-          message={JSON.stringify({ props: this.props, state: this.state })}
-        />);
-    }
-
-    const elementsList = Object.keys(weaknesses)
-                               .sort((a,b) => weaknesses[a] < weaknesses[b]);
+    const elementsList = Object.keys(weaknesses).sort(
+      (a, b) => weaknesses[a] < weaknesses[b]
+    );
 
     return (
       <div style={styles.container}>
         <span style={styles.name}>{name}</span>
-        <Monster
-          image={image}
-          style={styles.monsterIcon}
-        />
+        <Monster image={image} style={styles.monsterIcon} />
         {elementsList.map(elementName => (
-        <WeaknessRating
-          elementName={elementName}
-          starCount={weaknesses[elementName]}
-          style={styles.weaknessText}
-          key={`weakness-${elementName}`}
-        />)
-        )}
+          <this.WeaknessRating
+            elementName={elementName}
+            starCount={weaknesses[elementName]}
+            style={styles.weaknessText}
+            key={`weakness-${elementName}`}
+          />
+        ))}
       </div>
     );
   }
@@ -50,23 +53,25 @@ export default class MonsterDetailsView extends React.Component {
 
 const styles = {
   container: {
+    display: "flex",
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
+    flexDirection: "column",
+    backgroundColor: "#fff",
+    alignItems: "center"
   },
   monsterIcon: {
     margin: 30,
     width: 250,
     height: 250,
-    backgroundColor: 'white',
+    backgroundColor: "white"
   },
   weaknessText: {
-    fontSize: 18,
-    fontWeight: 'bold',
+    fontSize: "2rem",
+    fontWeight: "bold"
   },
   name: {
-    fontSize: 25,
-    fontWeight: 'bold',
-    marginTop: 5,
+    fontSize: "5rem",
+    fontWeight: "bold",
+    marginTop: 5
   }
 };

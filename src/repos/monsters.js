@@ -3,24 +3,27 @@ import MonsterIcons from 'data/monster-icons';
 import anyUndefinedOrNull from 'junk-drawer/anyUndefinedOrNull';
 
 // array of monster objects with all known data {name, key, image: imagePath, Fire: 3, Water: 0, Thunder: 2, ... }
-export const MonsterData = MonsterIcons.map(({name, image}) => ({
+export const MonsterData = MonsterIcons.map(({name, image, ...rest}) => ({
     name,
     image,
     key: name.split(' ').join('-'),
     ...MonsterWeaknesses[name],
+    ...rest
 }));
 
-// const WeaknessesForMonsterByName = searchName => {
-//     const monsterName = Object.keys(MonsterWeaknesses).find(monsterName => searchName === monsterName);
-//     return monsterName
-//         ? {
-//             name: monsterName,
-//             key: monsterName.split(' ').join('-'),
-//             ...MonsterWeaknesses[monsterName],
-//         } : {
-//             error: "monster name not found"
-//         };
-// };
+export const MonsterNameDictionary = MonsterData.reduce((monsterDict, monster) => ({
+    ...monsterDict,
+    [monster.name]: monster,
+}), {});
+
+export const GetMonsterByName = name => {
+    return name in MonsterNameDictionary
+        ? {
+            key: name.split(' ').join('-'),
+            ...MonsterIcons[name],
+            ...MonsterWeaknesses[name],
+        } : null;
+};
 
 export const sortByField = field => (monsterA, monsterB) => {
     if (!field) field = 'name';
