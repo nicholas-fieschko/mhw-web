@@ -1,6 +1,6 @@
 import React from "react";
 
-function Monster({ name, image, style, ...restProps }) {
+function Monster({ image, style, ...restProps }) {
   return (
     <img
       src={image}
